@@ -1,0 +1,217 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Cadastro</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Arial', sans-serif;
+      background-color: #0E0E10;
+      color: #FFFFFF;
+    }
+
+    .container {
+      max-width: 400px;
+      margin: 0 auto;
+      padding: 20px;
+    }
+
+    .banner {
+      width: 100%;
+      height: 150px;
+      background: url("1000714901.jpg") center center/cover no-repeat;
+      border-bottom: 2px solid  #4a01ff;
+    }
+
+    .logo {
+      text-align: center;
+      margin: 80px 0 60px;
+    }
+
+    .logo img {
+      height: 180px;
+    }
+
+    .input-group {
+      margin-bottom: 15px;
+    }
+
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+      color: #AAAAAA;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      border: none;
+      border-radius: 5px;
+      background-color: #1E1E22;
+      color: #FFFFFF;
+      font-size: 16px;
+      font-weight: bold;
+    }
+
+    input:focus {
+      outline: none;
+    }
+
+    .phone-container {
+      display: flex;
+      align-items: center;
+      background-color: #1E1E22;
+      border-radius: 5px;
+      padding: 0 10px;
+    }
+
+    .phone-container img {
+      width: 24px;
+      margin-right: 5px;
+    }
+
+    .phone-container span {
+      color: #FFFFFF;
+      font-weight: bold;
+      margin-right: 8px;
+    }
+
+    .phone-container input {
+      flex: 1;
+      border: none;
+      background-color: transparent;
+      font-size: 16px;
+      padding: 12px 0;
+    }
+    
+    .phone-container input:focus {
+      outline: none;
+    }
+
+    .terms {
+      display: flex;
+      align-items: center;
+      font-size: 14px;
+      color: #AAAAAA;
+      margin-top: 10px;
+    }
+
+    .terms input {
+      margin-right: 8px;
+      width: auto; 
+    }
+    
+    .terms label {
+      display: inline;
+      margin: 0;
+      font-weight: normal;
+    }
+
+    .terms a {
+      color:  #4a01ff;
+      text-decoration: none;
+    }
+
+    .btn {
+      width: 100%;
+      background-color: #4a01ff;
+      color: white;
+      font-size: 18px;
+      font-weight: bold;
+      padding: 14px;
+      border: none;
+      border-radius: 6px;
+      margin-top: 20px;
+      cursor: pointer;
+    }
+
+    .login {
+      text-align: center;
+      margin-top: 15px;
+      color: #AAAAAA;
+    }
+
+    .login a {
+      color:  #4a01ff;
+      text-decoration: none;
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="banner"></div>
+
+  <div class="container">
+    <div class="logo">
+      <img src="lg.png" alt="Logo">
+    </div>
+
+    <form id="cadastro-form">
+      <div class="input-group">
+        <label for="full-name">Nome Completo</label>
+        <input type="text" id="full-name" name="full-name" placeholder="Seu nome completo" required>
+      </div>
+      <div class="input-group">
+        <label for="username">Nome de usuário</label>
+        <input type="text" id="username" name="username" placeholder="Seu nome de usuário" required>
+      </div>
+
+      <div class="input-group">
+        <label for="email">E-mail</label>
+        <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+      </div>
+
+      <div class="input-group">
+        <label for="phone">Telefone</label>
+        <div class="phone-container">
+          <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/0/05/Flag_of_Brazil.svg/24px-Flag_of_Brazil.svg.png" alt="BR">
+          <span>+55</span>
+          <input type="tel" id="phone" name="phone" placeholder="(DDD) 90000-0000" required>
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="password">Senha</label>
+        <input type="password" id="password" name="password" placeholder="••••••••" required>
+      </div>
+
+      <div class="terms">
+        <input type="checkbox" id="terms" required>
+        <label for="terms">Concordo com os <a href="#">termos e condições</a></label>
+      </div>
+
+      <button class="btn" type="submit">Cadastrar</button>
+
+      <div class="login">
+        Já tem uma conta? <a href="login.html">Entre agora!</a>
+      </div>
+    </form>
+  </div>
+  
+  <script>
+    document.getElementById('cadastro-form').addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      const formData = new FormData(event.target);
+      const newCadastro = Object.fromEntries(formData.entries());
+
+      // Pega a lista de cadastros existente ou cria uma nova
+      const cadastros = JSON.parse(localStorage.getItem('cadastros')) || [];
+
+      // Adiciona o novo cadastro à lista
+      cadastros.push(newCadastro);
+
+      // Salva a lista atualizada no localStorage
+      localStorage.setItem('cadastros', JSON.stringify(cadastros));
+
+      alert('Cadastro realizado com sucesso! Você será redirecionado para a página de login.');
+
+      window.location.href = 'login.html';
+    });
+  </script>
+</body>
+</html>

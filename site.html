@@ -1,0 +1,1890 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Opiniões e Recompensas</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500;700&display=swap" rel="stylesheet">
+  <style>
+    /* === Variáveis CSS para Cores === */
+    :root {
+      --primary-color: #4a01ff; /* Roxo vibrante */
+      --secondary-color: #FF00FF; /* Magenta (mantido, mas pode ser ajustado) */
+      --background-dark: #0E0E10;
+      --card-background-dark: #1E1E22;
+      --text-dark: #FFFFFF;
+      --text-light-dark: #AAAAAA;
+      --button-bg-dark: #2D2D33;
+      --border-dark: #3A3A3F;
+      --notification-bar-dark: #28282D; /* Cor para a barra de notificação */
+      --notification-text-dark: #E0E0E0;
+
+      /* Light Mode */
+      --background-light: #F0F2F5;
+      --card-background-light: #FFFFFF;
+      --text-light: #333333;
+      --text-light-subtle: #666666;
+      --button-bg-light: #E6E6E6;
+      --border-light: #CCCCCC;
+      --notification-bar-light: #E0E2E5;
+      --notification-text-light: #444444;
+    }
+
+    /* === Estilos Padrão (Dark Mode) === */
+    body {
+      margin: 0;
+      font-family: 'Roboto', sans-serif; /* Usando Roboto agora */
+      background-color: var(--background-dark);
+      color: var(--text-dark);
+      overflow-x: hidden;
+      transition: background-color 0.3s, color 0.3s;
+      padding-bottom: 70px; /* Espaço para a navbar inferior */
+    }
+
+    /* === Light Mode Overrides === */
+    body.light-mode {
+      background-color: var(--background-light);
+      color: var(--text-light);
+    }
+    body.light-mode .header {
+        background-color: var(--card-background-light);
+        border-bottom-color: var(--border-light);
+    }
+    body.light-mode .balance-container .balance-value {
+        color: var(--text-light);
+    }
+    body.light-mode .balance-container .balance-value::before {
+        color: var(--text-light-subtle);
+    }
+    body.light-mode .toggle-balance-btn,
+    body.light-mode .theme-toggle-btn {
+        color: var(--primary-color);
+    }
+    body.light-mode .notification-bar {
+        background-color: var(--notification-bar-light);
+        color: var(--notification-text-light);
+        border-bottom-color: var(--border-light);
+    }
+    body.light-mode .notification-item .amount {
+        color: var(--primary-color);
+    }
+    body.light-mode .notification-icon {
+        color: var(--primary-color);
+    }
+    body.light-mode .question-card,
+    body.light-mode .balance-card,
+    body.light-mode .promotion-card {
+        background-color: var(--card-background-light);
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    body.light-mode .question-card h3,
+    body.light-mode .balance-card h3,
+    body.light-mode .promotion-card h4 {
+        color: var(--primary-color);
+    }
+    body.light-mode .response-buttons button {
+        background-color: var(--button-bg-light);
+        color: var(--text-light);
+    }
+    body.light-mode .response-buttons button:hover:not(:disabled) {
+        background-color: var(--border-light);
+    }
+    body.light-mode .response-buttons button:disabled {
+        background-color: #DDDDDD;
+        color: #AAAAAA;
+    }
+    body.light-mode .page-content-wrapper input {
+        background-color: var(--button-bg-light);
+        color: var(--text-light);
+        border-color: var(--primary-color);
+    }
+    body.light-mode .page-content-wrapper button {
+        background-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+    body.light-mode .page-content-wrapper button:hover {
+        background-color: var(--primary-color);
+    }
+    body.light-mode .withdraw-form button {
+        color: var(--primary-color);
+    }
+    body.light-mode .withdraw-form button::before {
+        background: linear-gradient(60deg, var(--primary-color), var(--secondary-color), #00C0FF, #00FFC0, #00C0FF, var(--secondary-color), var(--primary-color));
+        background-size: 300% 300%;
+    }
+    body.light-mode .withdraw-form button:hover {
+        background-color: var(--primary-color);
+        border-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+    body.light-mode .amount-btn {
+        background-image: linear-gradient(to bottom, #EEEEEE 0%, var(--button-bg-light) 50%, var(--button-bg-light) 100%);
+        color: var(--text-light);
+        box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    }
+    body.light-mode .amount-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 8px rgba(0, 0, 0, 0.15);
+    }
+    body.light-mode .amount-btn.selected {
+        background-image: linear-gradient(to top, #7a3eec 0%, var(--primary-color) 50%, var(--primary-color) 100%);
+        color: var(--text-dark);
+    }
+    body.light-mode .cookie-banner {
+        background-color: var(--card-background-light);
+        color: var(--text-light);
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.1);
+    }
+    body.light-mode .cookie-btn.manage {
+        color: var(--primary-color);
+        border-color: var(--primary-color);
+    }
+    body.light-mode .cookie-btn.manage:hover {
+        background-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+    body.light-mode .keyboard-container {
+        background-color: var(--card-background-light);
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.1);
+    }
+    body.light-mode .keyboard-key {
+        background-color: var(--button-bg-light);
+        color: var(--text-light);
+        box-shadow: 0 5px 0 var(--border-light), inset 0 5px 5px rgba(0, 0, 0, 0.05), inset 0 -5px 5px rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .keyboard-key:active {
+        box-shadow: 0 3px 0 var(--border-light), inset 0 2px 2px rgba(0, 0, 0, 0.05), inset 0 -3px 3px rgba(0, 0, 0, 0.05);
+    }
+    body.light-mode .roulette-wheel {
+        background-color: var(--card-background-light);
+        border-color: var(--primary-color);
+        box-shadow: 0 0 20px rgba(74, 1, 255, 0.2);
+    }
+    body.light-mode .roulette-wheel::before {
+        color: var(--text-dark);
+    }
+    body.light-mode .roulette-segment {
+        color: var(--text-dark); /* Texto dos segmentos sempre escuro para contraste */
+    }
+    body.light-mode .roulette-pin {
+        border-bottom-color: var(--text-light); /* Pin mais visível */
+    }
+
+
+    /* === Header === */
+    .header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      padding: 10px 20px;
+      background-color: var(--card-background-dark);
+      border-bottom: 1px solid var(--border-dark);
+      box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+      position: sticky;
+      top: 0;
+      z-index: 100;
+    }
+
+    .header .logo {
+        flex-grow: 1; /* Permite que o logo ocupe mais espaço */
+        text-align: left; /* Alinha o logo à esquerda */
+        cursor: pointer; /* Adicionado para indicar que é clicável */
+    }
+
+    .header .logo img {
+      height: 60px; /* Aumenta o tamanho do logo */
+      max-width: 180px; /* Garante que não fique muito largo em telas menores */
+      object-fit: contain;
+    }
+
+    .header .right-group {
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .gift-box {
+      width: 35px; /* Tamanho do ícone */
+      height: 35px;
+      cursor: pointer;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      animation: spin 2s linear infinite;
+    }
+
+    .gift-box img {
+      width: 100%;
+      height: 100%;
+    }
+
+    @keyframes spin {
+      from { transform: rotate(0deg); }
+      to { transform: rotate(360deg); }
+    }
+
+    .balance-container {
+        display: flex;
+        align-items: center;
+        gap: 5px;
+    }
+
+    .balance-container .balance-value {
+      color: var(--text-dark);
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+
+    .balance-container .balance-value::before {
+      content: 'R$ ';
+      color: var(--text-light-dark);
+    }
+
+    .balance-container .toggle-balance-btn,
+    .theme-toggle-btn {
+        background: none;
+        border: none;
+        color: var(--primary-color);
+        font-size: 1.1em;
+        cursor: pointer;
+        padding: 0;
+        transition: color 0.2s;
+        outline: none;
+    }
+    .balance-container .toggle-balance-btn i,
+    .theme-toggle-btn i {
+        font-size: 1.2em; /* Tamanho dos ícones */
+    }
+
+    /* === Notification Bar (Ticker) === */
+    .notification-bar {
+      width: 100%;
+      background-color: var(--notification-bar-dark);
+      color: var(--notification-text-dark);
+      padding: 8px 0;
+      overflow: hidden; /* Garante que o conteúdo quebra e permite rolagem */
+      white-space: nowrap; /* Impede que o texto quebre linha */
+      position: sticky;
+      top: 61px; /* Abaixo do header (40px logo + 2*10px padding = 60px + 1px border) */
+      z-index: 99;
+      border-bottom: 1px solid var(--border-dark);
+    }
+
+    .notification-bar-content {
+      display: inline-block; /* Permite a animação de rolagem */
+      padding-left: 100%; /* Inicia o texto fora da tela, à direita */
+      animation: scrollNotifications 30s linear infinite; /* Ajuste a duração conforme necessário */
+    }
+
+    .notification-icon {
+        font-size: 1.2em;
+        color: var(--primary-color);
+        margin-right: 8px;
+        vertical-align: middle;
+    }
+
+    .notification-item {
+      display: inline-block;
+      margin-right: 30px; /* Espaço entre as notificações */
+      font-size: 0.9em;
+      font-weight: 500;
+    }
+    .notification-item .amount {
+        color: #4CAF50; /* Verde para valores */
+        font-weight: bold;
+    }
+
+    @keyframes scrollNotifications {
+      0% {
+        transform: translateX(0%);
+      }
+      100% {
+        transform: translateX(-100%);
+      }
+    }
+
+
+    /* === Main Content === */
+    .main-content {
+      max-width: 800px;
+      margin: 20px auto;
+      padding: 0 15px;
+    }
+
+    .page {
+      display: none;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: opacity 0.5s, transform 0.5s;
+    }
+
+    .page.active {
+      display: block;
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    /* === Question Card === */
+    .question-card {
+      background-color: var(--card-background-dark);
+      padding: 20px;
+      border-radius: 12px;
+      margin-bottom: 15px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .question-card h3 {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-top: 0;
+      margin-bottom: 15px;
+      color: var(--primary-color);
+      font-size: 1.1em;
+      font-weight: 600;
+    }
+
+    .question-card h3 img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      object-fit: contain; /* Para logos não circulares */
+    }
+
+    .response-buttons {
+      display: grid; /* Layout em grid para botões */
+      grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+      gap: 10px;
+    }
+
+    .response-buttons button {
+      background-color: var(--button-bg-dark);
+      color: var(--text-dark);
+      border: none;
+      border-radius: 8px;
+      padding: 10px 15px;
+      font-size: 0.9em;
+      cursor: pointer;
+      transition: background-color 0.3s, transform 0.1s;
+      outline: none;
+      font-weight: 500;
+    }
+
+    .response-buttons button:hover:not(:disabled) {
+      background-color: #444;
+      transform: translateY(-2px);
+    }
+
+    .response-buttons button:disabled {
+      background-color: #3A3A3F;
+      color: #777;
+      cursor: not-allowed;
+    }
+
+    .pagination {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 20px;
+      gap: 15px;
+    }
+
+    .nav-btn {
+      background-color: var(--primary-color);
+      color: var(--text-dark);
+      border: none;
+      border-radius: 50%;
+      width: 40px;
+      height: 40px;
+      font-size: 1.2em;
+      font-weight: bold;
+      cursor: pointer;
+      transition: background-color 0.3s;
+      outline: none;
+    }
+
+    .nav-btn:hover:not(:disabled) {
+      background-color: #7a3eec;
+    }
+    .nav-btn:disabled {
+      background-color: #444;
+      cursor: not-allowed;
+    }
+
+    .page-counter {
+      color: var(--text-light-dark);
+      font-weight: 600;
+    }
+
+    /* === Pages Wrapper === */
+    .page-content-wrapper {
+      padding: 0; /* Removendo padding para se adequar ao layout de cartão */
+      margin-top: 0;
+      text-align: center;
+    }
+
+    .page-content-wrapper h2 {
+      color: var(--primary-color);
+      margin-bottom: 20px;
+      font-size: 1.5em;
+      font-weight: 600;
+    }
+
+    /* === Bottom Navigation Bar === */
+    .bottom-navbar {
+      position: fixed;
+      bottom: 0;
+      left: 0;
+      width: 100%;
+      background-color: var(--card-background-dark);
+      border-top: 1px solid var(--border-dark);
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+      padding: 10px 0;
+      box-shadow: 0 -2px 10px rgba(0,0,0,0.4);
+      z-index: 100;
+    }
+    body.light-mode .bottom-navbar {
+        background-color: var(--card-background-light);
+        border-top-color: var(--border-light);
+        box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    }
+
+    .nav-item {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: var(--text-light-dark);
+      text-decoration: none;
+      font-size: 0.8em;
+      font-weight: 500;
+      transition: color 0.2s;
+      padding: 5px;
+      border-radius: 8px;
+      outline: none;
+    }
+
+    .nav-item i {
+      font-size: 1.5em;
+      margin-bottom: 5px;
+    }
+
+    .nav-item.active {
+      color: var(--primary-color);
+    }
+    .nav-item:hover {
+        color: var(--primary-color);
+    }
+
+    /* === Estilos da Roleta === */
+    .roulette-container {
+      width: 300px;
+      height: 300px;
+      margin: 20px auto;
+      position: relative;
+    }
+
+    .roulette-wheel {
+      width: 100%;
+      height: 100%;
+      border-radius: 50%;
+      position: relative;
+      background-color: var(--card-background-dark);
+      border: 10px solid var(--primary-color);
+      box-shadow: 0 0 20px rgba(74, 1, 255, 0.5);
+      transition: transform 5s cubic-bezier(0.1, 0.8, 0.3, 1.2);
+    }
+
+    .roulette-wheel::before {
+      content: 'GIRAR';
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: linear-gradient(to bottom, #FFD700, #DAA520);
+      color: var(--text-dark); /* Botão girar escuro para contraste */
+      font-size: 1.5em;
+      font-weight: bold;
+      width: 100px;
+      height: 100px;
+      border-radius: 50%;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 3;
+      cursor: pointer;
+      box-shadow: 0 0 10px rgba(0,0,0,0.5);
+      outline: none;
+    }
+
+    .roulette-pin {
+      width: 0;
+      height: 0;
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 30px solid var(--text-dark);
+      position: absolute;
+      top: 5px;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 5;
+    }
+
+    .roulette-segment {
+      position: absolute;
+      width: 50%;
+      height: 50%;
+      top: 0;
+      left: 25%;
+      transform-origin: 50% 100%;
+      overflow: hidden;
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      color: var(--text-dark); /* Texto do segmento */
+      text-shadow: 1px 1px 2px #000;
+      font-weight: bold;
+      font-size: 0.9em;
+    }
+
+    .roulette-segment:nth-child(odd) { background: linear-gradient(to bottom, var(--primary-color), #3b00c7); } /* Ajustando o degradê com a nova cor */
+    .roulette-segment:nth-child(even) { background: linear-gradient(to bottom, #FF5757, #C64242); }
+
+    .roulette-segment:nth-child(1) { transform: rotate(0deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(2) { transform: rotate(45deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(3) { transform: rotate(90deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(4) { transform: rotate(135deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(5) { transform: rotate(180deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(6) { transform: rotate(225deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(7) { transform: rotate(270deg) skewY(-22.5deg); }
+    .roulette-segment:nth-child(8) { transform: rotate(315deg) skewY(-22.5deg); }
+
+    .roulette-segment-content {
+      position: absolute;
+      width: 100%;
+      text-align: center;
+      top: 30px;
+      transform: rotate(22.5deg) translateY(-50px);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 5px;
+    }
+    .roulette-segment-content .fas {
+        font-size: 1.5em;
+        margin-bottom: 5px;
+    }
+
+    .roulette-segment:nth-child(1) .roulette-segment-content { transform: rotate(22.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(2) .roulette-segment-content { transform: rotate(67.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(3) .roulette-segment-content { transform: rotate(112.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(4) .roulette-segment-content { transform: rotate(157.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(5) .roulette-segment-content { transform: rotate(202.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(6) .roulette-segment-content { transform: rotate(247.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(7) .roulette-segment-content { transform: rotate(292.5deg) translateX(40px) translateY(-50px); }
+    .roulette-segment:nth-child(8) .roulette-segment-content { transform: rotate(337.5deg) translateX(40px) translateY(-50px); }
+
+
+    /* Spin Button */
+    #spin-button {
+      background-color: var(--primary-color);
+      color: var(--text-dark);
+      padding: 12px 25px;
+      border: none;
+      border-radius: 25px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      margin-top: 20px;
+      transition: background-color 0.3s;
+      outline: none;
+    }
+    #spin-button:hover:not(:disabled) {
+        background-color: #7a3eec;
+    }
+    #spin-button:disabled {
+        background-color: #555;
+        cursor: not-allowed;
+    }
+
+
+    /* === Promoções Card === */
+    .promotion-card {
+        background-color: var(--card-background-dark);
+        padding: 20px;
+        border-radius: 12px;
+        margin-bottom: 15px;
+        text-align: left;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .promotion-card img {
+        width: 100%;
+        border-radius: 8px;
+        margin-bottom: 10px;
+    }
+
+    .promotion-card h4 {
+        margin: 0;
+        color: var(--primary-color);
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 5px;
+    }
+    .promotion-card p {
+        font-size: 0.9em;
+        color: var(--text-light-dark);
+    }
+
+    /* === Saldo Page === */
+    .balance-container-page { /* Renomeado para evitar conflito com .balance-container do header */
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+    }
+    .balance-card {
+        background-color: var(--card-background-dark);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+        text-align: left;
+    }
+    .balance-card h3 {
+        margin-top: 0;
+        color: var(--primary-color);
+        font-size: 1.1em;
+        font-weight: 600;
+        margin-bottom: 15px;
+    }
+    .balance-card p {
+        color: var(--text-light-dark);
+        line-height: 1.5;
+        font-size: 0.9em;
+    }
+    .balance-card .balance-main {
+        font-size: 2.5em; /* Reduzido um pouco */
+        font-weight: 700;
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+    .transaction-list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+    }
+    .transaction-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-bottom: 1px solid var(--border-dark);
+        font-size: 0.9em;
+    }
+    .transaction-item:last-child {
+        border-bottom: none;
+    }
+    .transaction-item .amount {
+        font-weight: bold;
+        color: #4CAF50;
+    }
+
+    /* Estilos do botão de Saque na página de Saldo */
+    .balance-card .withdraw-button-container {
+        text-align: center;
+        margin-top: 20px;
+    }
+    .balance-card .withdraw-btn {
+      background-color: transparent;
+      color: var(--primary-color);
+      font-size: 1.1em;
+      font-weight: 600;
+      padding: 12px 25px;
+      border: 2px solid var(--primary-color);
+      border-radius: 25px;
+      cursor: pointer;
+      width: 80%;
+      max-width: 300px;
+      outline: none;
+      transition: all 0.3s ease;
+    }
+    .balance-card .withdraw-btn:hover {
+      background-color: var(--primary-color);
+      color: var(--text-dark);
+    }
+
+    /* === Página de Saque === */
+    .withdraw-page-content {
+        max-width: 500px;
+        margin: 0 auto;
+    }
+    .withdraw-page-content h2 {
+        color: var(--text-dark);
+        text-align: center;
+        margin-bottom: 10px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        gap: 10px;
+    }
+    .withdraw-page-content h2 img {
+        height: 25px; /* Ajuste para o logo PIX */
+    }
+    .withdraw-page-content p {
+        text-align: center;
+        color: var(--text-light-dark);
+        margin-bottom: 20px;
+        font-size: 0.9em;
+    }
+    .withdraw-amount-container {
+        display: grid; /* Grid para os botões de valor */
+        grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        gap: 10px;
+        margin-bottom: 20px;
+    }
+
+    /* Estilo do botão de saque com efeito 3D */
+    .amount-btn {
+      background-color: var(--button-bg-dark);
+      background-image: linear-gradient(to bottom, #44444A 0%, var(--button-bg-dark) 50%, var(--button-bg-dark) 100%);
+      color: var(--text-dark);
+      border: none;
+      border-radius: 15px; /* Menos arredondado para um visual mais moderno */
+      padding: 12px 20px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      box-shadow: 0 3px 5px rgba(0, 0, 0, 0.4),
+                  inset 0px 3px 4px rgba(74, 1, 255, 0.3), /* Cor ajustada aqui */
+                  inset 0px 0px 4px rgba(255, 255, 255, 0.1);
+      transition: all 0.2s ease-in-out;
+      transform: translateY(0);
+      outline: none;
+    }
+    .amount-btn:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 5px 7px rgba(0, 0, 0, 0.4),
+                  inset 0px 3px 4px rgba(74, 1, 255, 0.5), /* Cor ajustada aqui */
+                  inset 0px 0px 4px rgba(255, 255, 255, 0.2);
+    }
+    .amount-btn.selected {
+      background-color: var(--primary-color);
+      background-image: linear-gradient(to top, #3b00c7 0%, var(--primary-color) 50%, var(--primary-color) 100%); /* Cor ajustada aqui */
+      border-color: var(--primary-color);
+      box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4),
+                  inset 0px 0px 4px rgba(255, 255, 255, 0.1),
+                  inset 0px 3px 4px rgba(0, 0, 0, 0.2);
+      transform: translateY(1px);
+    }
+
+    .withdraw-info {
+        text-align: center;
+        color: var(--text-light-dark);
+        margin-bottom: 20px;
+        font-size: 0.9em;
+    }
+    .withdraw-form {
+        display: flex;
+        flex-direction: column;
+        gap: 15px;
+        text-align: left; /* Alinhar labels à esquerda */
+    }
+    .withdraw-form label {
+        font-size: 0.9em;
+        color: var(--text-light-dark);
+        font-weight: 500;
+    }
+    .withdraw-form input {
+        padding: 12px;
+        border-radius: 8px;
+        border: 1px solid var(--primary-color);
+        background-color: var(--button-bg-dark);
+        color: var(--text-dark);
+        font-size: 1em;
+        outline: none;
+    }
+
+    /* === Estilo do botão de Confirmar Saque (Animado) === */
+    .withdraw-form button {
+      background-color: transparent;
+      color: var(--primary-color);
+      padding: 12px 25px;
+      border: 2px solid transparent;
+      border-radius: 30px; /* Mais arredondado */
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: all 0.3s ease-in-out;
+      outline: none;
+      position: relative;
+      overflow: hidden;
+      z-index: 1;
+      margin-top: 10px; /* Espaçamento após o input */
+    }
+
+    .withdraw-form button::before {
+      content: '';
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      right: -5px;
+      bottom: -5px;
+      border: 2px solid transparent;
+      border-radius: 35px; /* Ligeiramente maior que o border-radius do botão */
+      background: linear-gradient(60deg, #f0f, #ff0, #0ff, #0f0, #0ff, #ff0, #f0f);
+      background-size: 300% 300%;
+      background-clip: border-box;
+      -webkit-mask: linear-gradient(#fff 0, #fff 100%);
+      mask: linear-gradient(#fff 0, #fff 100%);
+      -webkit-mask-composite: exclude;
+      mask-composite: exclude;
+      pointer-events: none;
+      animation: borderSpin 5s linear infinite, gradientMove 5s linear infinite;
+      z-index: -1;
+    }
+
+    @keyframes borderSpin {
+      100% { transform: rotate(360deg); }
+    }
+
+    @keyframes gradientMove {
+      0% { background-position: 0% 50%; }
+      50% { background-position: 100% 50%; }
+      100% { background-position: 0% 50%; }
+    }
+
+    .withdraw-form button:hover {
+      background-color: var(--primary-color);
+      border-color: var(--primary-color);
+      color: var(--text-dark);
+    }
+    .withdraw-form button:hover::before {
+        display: none;
+    }
+
+    .withdraw-message {
+        text-align: center;
+        margin-top: 20px;
+        font-size: 1em;
+        font-weight: 600;
+        color: #4CAF50;
+        display: none;
+    }
+
+    /* === Página de Conta Bancária === */
+    #bank-account-page .page-content-wrapper form {
+      background-color: var(--card-background-dark);
+      padding: 20px;
+      border-radius: 12px;
+      box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+      text-align: left;
+    }
+    #bank-account-page .page-content-wrapper button {
+      width: 100%;
+      margin-top: 10px;
+      padding: 12px;
+      border-radius: 8px;
+    }
+
+
+    /* === Informações Legais === */
+    .legal-content-wrapper {
+        text-align: left;
+        line-height: 1.6;
+        background-color: var(--card-background-dark);
+        padding: 20px;
+        border-radius: 12px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    }
+
+    .legal-content-wrapper h2 {
+        color: var(--primary-color);
+        text-align: center;
+        margin-bottom: 20px;
+    }
+
+    .legal-content-wrapper h3 {
+        color: var(--primary-color);
+        margin-top: 1.5em;
+        margin-bottom: 0.8em;
+        font-size: 1.2em;
+        font-weight: 600;
+    }
+    .legal-content-wrapper p {
+        font-size: 0.9em;
+        color: var(--text-light-dark);
+    }
+
+    .legal-content-wrapper a {
+        color: var(--primary-color);
+        text-decoration: none;
+    }
+
+    /* === Banner de Cookies === */
+    .cookie-banner {
+        position: fixed;
+        bottom: 70px; /* Acima da navbar inferior */
+        left: 0;
+        width: 100%;
+        background-color: var(--card-background-dark);
+        color: var(--text-dark);
+        padding: 15px 20px;
+        box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.5);
+        display: none;
+        flex-direction: column; /* Em coluna para melhor responsividade */
+        align-items: center;
+        gap: 15px;
+        z-index: 1002;
+    }
+    body.light-mode .cookie-banner {
+        background-color: var(--card-background-light);
+        color: var(--text-light);
+    }
+
+
+    .cookie-banner-text {
+        font-size: 0.85em;
+        line-height: 1.4;
+        max-width: 600px;
+        margin: 0;
+        text-align: center;
+        color: var(--text-light-dark);
+    }
+
+    .cookie-buttons {
+        display: flex;
+        gap: 10px;
+        flex-wrap: wrap; /* Botões quebram linha se necessário */
+        justify-content: center;
+    }
+
+    .cookie-btn {
+        padding: 10px 15px;
+        border: none;
+        border-radius: 5px;
+        font-weight: 600;
+        cursor: pointer;
+        font-size: 0.9em;
+        transition: background-color 0.3s, color 0.3s;
+        outline: none;
+    }
+
+    .cookie-btn.accept {
+        background-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+
+    .cookie-btn.accept:hover {
+        background-color: #3b00c7;
+    }
+
+    .cookie-btn.manage {
+        background-color: transparent;
+        color: var(--primary-color);
+        border: 2px solid var(--primary-color);
+    }
+
+    .cookie-btn.manage:hover {
+        background-color: var(--primary-color);
+        color: var(--text-dark);
+    }
+
+    /* === Teclado Numérico === */
+    .keyboard-container {
+        position: fixed;
+        bottom: 0; /* Alinhado com a parte inferior da tela */
+        left: 0;
+        width: 100%;
+        background-color: var(--card-background-dark);
+        padding: 10px;
+        box-shadow: 0 -5px 20px rgba(0, 0, 0, 0.5);
+        display: none;
+        flex-wrap: wrap;
+        justify-content: center;
+        gap: 10px;
+        z-index: 10000;
+        animation: slideUp 0.3s ease-out forwards;
+    }
+
+    @keyframes slideUp {
+        from { transform: translateY(100%); }
+        to { transform: translateY(0); }
+    }
+
+    .keyboard-key {
+        width: 80px;
+        height: 60px;
+        background-color: var(--button-bg-dark);
+        color: var(--text-dark);
+        font-size: 1.5em;
+        border: none;
+        border-radius: 10px;
+        cursor: pointer;
+        box-shadow: 0 5px 0 #1E1E22, inset 0 5px 5px rgba(255, 255, 255, 0.1), inset 0 -5px 5px rgba(0, 0, 0, 0.2);
+        position: relative;
+        transform: translateY(0);
+        transition: transform 0.1s ease, box-shadow 0.1s ease;
+        outline: none;
+    }
+
+    .keyboard-key:active {
+        transform: translateY(2px);
+        box-shadow: 0 3px 0 #1E1E22, inset 0 2px 2px rgba(255, 255, 255, 0.1), inset 0 -3px 3px rgba(0, 0, 0, 0.2);
+    }
+
+    .keyboard-key.delete-key {
+        width: 170px; /* Largura ajustada para 2 colunas - 10px de gap */
+    }
+
+    /* Responsividade */
+    @media (max-width: 600px) {
+        .header {
+            padding: 10px 15px;
+        }
+        .header .logo img {
+            height: 50px; /* Ajuste para o tamanho da tela menor */
+            max-width: 150px;
+        }
+        .gift-box {
+            width: 30px;
+            height: 30px;
+        }
+        .balance-container .balance-value {
+            font-size: 1em;
+        }
+        .balance-container .toggle-balance-btn,
+        .theme-toggle-btn {
+            font-size: 1em;
+        }
+        .balance-container .toggle-balance-btn i,
+        .theme-toggle-btn i {
+            font-size: 1.1em;
+        }
+        .notification-bar {
+            top: 51px; /* Ajuste para o novo header em mobile */
+        }
+        .notification-icon {
+            font-size: 1em;
+        }
+        .notification-item {
+            font-size: 0.8em;
+            margin-right: 20px;
+        }
+        .main-content {
+            margin: 15px auto;
+            padding: 0 10px;
+        }
+        .question-card, .balance-card, .promotion-card, .legal-content-wrapper {
+            padding: 15px;
+            border-radius: 10px;
+        }
+        .question-card h3 {
+            font-size: 1em;
+        }
+        .question-card h3 img {
+            width: 30px;
+            height: 30px;
+        }
+        .response-buttons {
+            grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+        }
+        .response-buttons button {
+            padding: 8px 10px;
+            font-size: 0.85em;
+        }
+        .nav-item {
+            font-size: 0.75em;
+        }
+        .nav-item i {
+            font-size: 1.3em;
+        }
+        .roulette-container {
+            width: 280px;
+            height: 280px;
+        }
+        .roulette-wheel::before {
+            width: 80px;
+            height: 80px;
+            font-size: 1.2em;
+        }
+        #spin-button {
+            padding: 10px 20px;
+            font-size: 1em;
+        }
+        .balance-card .balance-main {
+            font-size: 2em;
+        }
+        .balance-card .withdraw-btn {
+            font-size: 1em;
+            padding: 10px 20px;
+        }
+        .amount-btn {
+            padding: 10px 15px;
+            font-size: 1em;
+        }
+        .keyboard-key {
+            width: 70px;
+            height: 55px;
+            font-size: 1.3em;
+        }
+        .keyboard-key.delete-key {
+            width: 150px;
+        }
+        .cookie-banner {
+            padding: 10px 15px;
+            gap: 10px;
+        }
+        .cookie-banner-text {
+            font-size: 0.8em;
+        }
+        .cookie-btn {
+            padding: 8px 12px;
+            font-size: 0.8em;
+        }
+    }
+
+  </style>
+</head>
+<body>
+
+  <div class="header">
+    <div class="logo" id="main-logo"> <img src="lg.png" alt="Logo">
+    </div>
+    <div class="right-group">
+      <div class="gift-box" id="gift-box">
+        <img src="https://img.icons8.com/color/48/000000/gift.png" alt="gift"/>
+      </div>
+      <div class="balance-container">
+        <span id="balance-amount" class="balance-value">••••</span>
+      </div>
+      <button id="theme-toggle-btn" class="theme-toggle-btn"><i class="fa-solid fa-sun"></i></button>
+      <button id="toggle-balance-btn" class="toggle-balance-btn"><i class="fa-regular fa-eye-slash"></i></button>
+    </div>
+  </div>
+
+  <div class="notification-bar">
+    <div class="notification-bar-content" id="notification-bar-content">
+      </div>
+  </div>
+
+  <div class="main-content">
+
+    <div class="page active" id="home-page">
+      <div id="questions-container">
+        <h2>O que você acha?</h2>
+      </div>
+      <div class="pagination">
+        <button id="prev-btn" class="nav-btn"><</button>
+        <span id="page-counter" class="page-counter"></span>
+        <button id="next-btn" class="nav-btn">></button>
+      </div>
+    </div>
+
+    <div class="page" id="balance-page">
+      <div class="page-content-wrapper">
+        <h2>Seu Saldo</h2>
+        <div class="balance-container-page">
+            <div class="balance-card">
+                <div class="balance-main">
+                    R$ <span id="balance-amount-page">0,00</span>
+                </div>
+                <h3>Como o seu Saldo é gerado?</h3>
+                <p>O saldo é acumulado através da sua participação nas pesquisas de opinião e também em giros premiados na nossa roleta de bônus.</p>
+            </div>
+
+            <div class="balance-card">
+                <h3>Histórico de Ganhos Recentes</h3>
+                <ul class="transaction-list">
+                    <li class="transaction-item">
+                        <span>Giro na Roleta</span>
+                        <span class="amount">+ R$ 0,50</span>
+                    </li>
+                    <li class="transaction-item">
+                        <span>Opinião sobre a marca Magazine Luiza</span>
+                        <span class="amount">+ R$ 0,25</span>
+                    </li>
+                    <li class="transaction-item">
+                        <span>Opinião sobre a marca Amazon</span>
+                        <span class="amount">+ R$ 0,25</span>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="balance-card">
+                <h3>Opções de Saque</h3>
+                <p>O valor mínimo para realizar o saque é de R$ 50,00. Certifique-se de que sua conta bancária está cadastrada corretamente para um saque rápido e seguro.</p>
+                <div class="withdraw-button-container">
+                    <button class="withdraw-btn" id="withdraw-btn-balance">
+                        Saque
+                    </button>
+                </div>
+            </div>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="withdraw-page">
+        <div class="page-content-wrapper">
+            <div class="withdraw-page-content">
+                <h2 style="display: flex; align-items: center; justify-content: center; gap: 10px;">
+                    Saque seu Dinheiro
+                    <img src="https://upload.wikimedia.org/wikipedia/commons/a/a2/Logo—pix_powered_by_Banco_Central_%28Brazil%2C_2020%29.svg" alt="Logo PIX" style="height: 80px; vertical-align: middle;">
+                </h2>
+                <p class="withdraw-info">
+                    Informe o valor desejado para saque (mínimo R$ 50, máximo R$ 100).
+                </p>
+
+                <div class="withdraw-amount-container" id="withdraw-amounts">
+                    <button class="amount-btn" data-value="50">R$ 50</button>
+                    <button class="amount-btn" data-value="60">R$ 60</button>
+                    <button class="amount-btn" data-value="70">R$ 70</button>
+                    <button class="amount-btn" data-value="100">R$ 100</button>
+                </div>
+
+                <p class="withdraw-info" id="withdraw-limit-info" style="display: none;">
+                    Você selecionou o valor de R$ <span id="selected-amount-display">0</span>.<br>
+                    Seu saldo atual está sendo processado.
+                </p>
+
+                <div class="withdraw-form" id="pix-form" style="display: none;">
+                    <label for="pix-key">Chave PIX:</label>
+                    <input type="text" id="pix-key" placeholder="Digite sua chave PIX aqui (E-mail, CPF, Telefone ou Aleatória)">
+                    <button id="confirm-withdraw-btn">Confirmar Saque</button>
+                </div>
+
+                <div id="withdraw-message" class="withdraw-message">
+                    Seu saque está sendo processado e será enviado em até 24h.
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="page" id="bank-account-page">
+      <div class="page-content-wrapper">
+        <h2>Dados da Conta Bancária</h2>
+        <form id="bank-form">
+          <label for="bank-name">Banco:</label>
+          <input type="text" id="bank-name" placeholder="Ex: NuBank, Inter">
+          <label for="agency">Agência:</label>
+          <input type="text" id="agency" placeholder="0001">
+          <label for="account">Conta:</label>
+          <input type="text" id="account" placeholder="123456-7">
+          <button type="submit">Salvar Dados</button>
+        </form>
+      </div>
+    </div>
+
+    <div class="page" id="roulette-page">
+      <div class="page-content-wrapper">
+        <h2>Gire a Roleta e Ganhe!</h2>
+        <div class="roulette-container">
+          <div class="roulette-wheel" id="roulette-wheel">
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user-friends"></i> JACKPOT
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user"></i> R$ 0.10
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user"></i> R$ 0.25
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user-friends"></i> R$ 0.50
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user"></i> R$ 0.75
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user-friends"></i> R$ 1.00
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user"></i> R$ 1.50
+              </div>
+            </div>
+            <div class="roulette-segment">
+              <div class="roulette-segment-content">
+                <i class="fas fa-user-friends"></i> R$ 2.00
+              </div>
+            </div>
+            <div class="roulette-pin"></div>
+          </div>
+          <button id="spin-button">Girar Roleta</button>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="promotions-page">
+      <div class="page-content-wrapper">
+        <h2>Promoções Especiais</h2>
+        <div class="promotion-card">
+            <img src="IMG_20250730_160728_712.jpg" alt="Promoção 1">
+            <h4>Responda 10 perguntas e ganhe um bônus!</h4>
+            <p>Complete 10 perguntas do painel e receba um bônus de R$ 2,50 no seu saldo.</p>
+        </div>
+        <div class="promotion-card">
+            <img src="IMG_20250730_155236_984.jpg" alt="Promoção 2">
+            <h4>Aproveite a Roleta Dourada!</h4>
+            <p>Gire a roleta e tenha a chance de ganhar até R$ 5,00 extras.</p>
+        </div>
+      </div>
+    </div>
+
+    <div class="page" id="legal-page">
+        <div class="legal-content-wrapper">
+            <h2>Informações Legais</h2>
+
+            <h3>1. Termos de Uso</h3>
+            <p>
+                Bem-vindo ao nosso site de Opiniões e Recompensas. Ao acessar e utilizar nossos serviços, você concorda em cumprir e se sujeitar aos seguintes termos e condições de uso. O site permite que você participe de pesquisas de opinião em troca de recompensas. O uso indevido da plataforma, como a criação de múltiplas contas ou respostas fraudulentas, resultará na suspensão ou encerramento da sua conta e na perda de quaisquer saldos acumulados.
+            </p>
+
+            <h3>2. Política de Privacidade</h3>
+            <p>
+                Sua privacidade é importante para nós. Coletamos apenas as informações essenciais para a operação do site, como seu endereço de e-mail para comunicação e informações de conta bancária (opcional) para processar saques. Seus dados de resposta às pesquisas são anonimizados e utilizados apenas para fins estatísticos e de pesquisa de mercado. Não vendemos ou compartilhamos suas informações pessoais com terceiros sem seu consentimento explícito.
+            </p>
+
+            <h3>3. Política de Cookies</h3>
+            <p>
+                Utilizamos cookies para melhorar a sua experiência de navegação. Os cookies são pequenos arquivos de texto armazenados no seu dispositivo que nos permitem lembrar suas preferências, como o seu saldo atual e quais perguntas você já respondeu. Eles são essenciais para o funcionamento correto do site. Ao aceitar, você nos permite usar cookies para as finalidades descritas nesta política. Você pode gerenciar ou desativar os cookies nas configurações do seu navegador, mas isso pode afetará a funcionalidade do site.
+            </p>
+        </div>
+    </div>
+
+  </div>
+
+  <div class="bottom-navbar">
+    <a href="#" class="nav-item active" data-page="home-page">
+      <i class="fas fa-home"></i>
+      <span>Início</span>
+    </a>
+    <a href="#" class="nav-item" data-page="balance-page">
+      <i class="fas fa-wallet"></i>
+      <span>Saldo</span>
+    </a>
+    <a href="#" class="nav-item" data-page="roulette-page">
+      <i class="fas fa-dice-d20"></i>
+      <span>Roleta</span>
+    </a>
+    <a href="#" class="nav-item" data-page="promotions-page">
+      <i class="fas fa-tags"></i>
+      <span>Ofertas</span>
+    </a>
+    <a href="#" class="nav-item" data-page="legal-page">
+      <i class="fas fa-info-circle"></i>
+      <span>Info</span>
+    </a>
+  </div>
+
+  <div id="cookie-banner" class="cookie-banner" style="display: none;">
+      <p class="cookie-banner-text">
+        Este site utiliza cookies para personalizar o conteúdo, fornecer funcionalidades de redes sociais e analisar nosso tráfego. Para mais informações, confira nossa <a href="#" class="menu-item" data-page="legal-page">Política de Cookies</a>.
+      </p>
+      <div class="cookie-buttons">
+          <button id="accept-all-cookies" class="cookie-btn accept">Aceitar Todos</button>
+          <button id="manage-cookies" class="cookie-btn manage">Gerenciar Preferências</button>
+      </div>
+  </div>
+
+  <div id="keyboard-container" class="keyboard-container">
+      <button class="keyboard-key">1</button>
+      <button class="keyboard-key">2</button>
+      <button class="keyboard-key">3</button>
+      <button class="keyboard-key">4</button>
+      <button class="keyboard-key">5</button>
+      <button class="keyboard-key">6</button>
+      <button class="keyboard-key">7</button>
+      <button class="keyboard-key">8</button>
+      <button class="keyboard-key">9</button>
+      <button class="keyboard-key" data-value=".">.</button>
+      <button class="keyboard-key">0</button>
+      <button class="keyboard-key delete-key">C</button>
+  </div>
+
+
+  <script>
+    document.addEventListener('DOMContentLoaded', () => {
+      let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+      const balanceAmount = document.getElementById('balance-amount');
+      const balanceAmountPage = document.getElementById('balance-amount-page');
+      const toggleBalanceBtn = document.getElementById('toggle-balance-btn');
+      const withdrawBtnBalance = document.getElementById('withdraw-btn-balance');
+      const questionsContainer = document.getElementById('questions-container');
+      const withdrawAmountsContainer = document.getElementById('withdraw-amounts');
+      const confirmWithdrawBtn = document.getElementById('confirm-withdraw-btn');
+      const pixKeyInput = document.getElementById('pix-key');
+      const withdrawMessage = document.getElementById('withdraw-message');
+      const themeToggleBtn = document.getElementById('theme-toggle-btn');
+      const mainLogo = document.getElementById('main-logo'); // Obtenha o elemento do logo
+
+      const prevBtn = document.getElementById('prev-btn');
+      const nextBtn = document.getElementById('next-btn');
+      const pageCounter = document.getElementById('page-counter');
+      const selectedAmountDisplay = document.getElementById('selected-amount-display');
+      const withdrawLimitInfo = document.getElementById('withdraw-limit-info');
+      const pixForm = document.getElementById('pix-form');
+
+      let isBalanceVisible = false;
+      const storedBalance = localStorage.getItem('userBalance');
+      if (storedBalance) {
+        balance = parseFloat(storedBalance);
+      }
+
+      let currentTheme = localStorage.getItem('theme') || 'dark';
+
+      // Variáveis para a lógica do clique no logo
+      let logoClickCount = 0;
+      let lastClickTime = 0;
+      const CLICK_THRESHOLD = 500; // Milissegundos para considerar cliques consecutivos
+
+      const allQuestions = [
+        { brand: 'Magazine Luiza', logo: 'https://logodownload.org/wp-content/uploads/2014/06/magalu-logo-0.png', options: ['Já usei', 'Já comprei', 'Já consumi', 'Já trabalhei para a marca', 'Nunca usei'] },
+        { brand: 'Amazon', logo: 'https://dl.memuplay.com/new_market/img/com.amazon.mShop.android.shopping.icon.2024-03-09-11-47-29.png', options: ['Já usei', 'Já comprei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Adidas', logo: 'https://logodownload.org/wp-content/uploads/2019/11/adidas-originals-logo-0.png', options: ['Já usei', 'Já comprei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Mercado Livre', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQX06VrGhuk9TIkQ_XtmwOjJkpvFYgfOyrbTg&usqp=CAU', options: ['Já usei', 'Já comprei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Spotify', logo: 'https://cdn-icons-png.flaticon.com/512/2111/2111624.png', options: ['Já usei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Americanas', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQGMTgb_pU8-6F0WVHydb6XehNtd70CwSis1g&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Nike', logo: 'https://logodownload.org/wp-content/uploads/2014/04/nike-logo.png', options: ['Já usei', 'Já comprei', 'Já consumi', 'Já trabalhei para a marca', 'Nunca usei'] },
+        { brand: 'Netflix', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTIi5PawHMAIWSKXr0x7DgCFXdcxphOtIRZgIKL2T6WmDWs2gAjDBCOapRX&s=10', options: ['Já usei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Nubank', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSy3W45nTX7S3719aHVwowmbpCzdTYv6FAwxA&s', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Samsung', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRHNU9B7Ak3DPbM6b9BpbuP8QbPnrauqNyoAA&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Apple', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQvGr_gcae6XtWPibhRYSipLlbuD4ajWX4qyA&s', options: ['Já usei', 'Já comprei', 'Já trabalhei para a marca', 'Nunca usei'] },
+        { brand: 'YouTube', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcR1qXZChidikJt4_sI7L5xpzqCENSXiI-ie5g&s', options: ['Já usei', 'Já consumi', 'Nunca usei'] },
+        { brand: 'Coca-Cola', logo: 'https://logodownload.org/wp-content/uploads/2014/04/coca-cola-logo-1-1.png', options: ['Já consumi', 'Já trabalhei para a marca', 'Nunca consumi'] },
+        { brand: 'Google', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ5sQdvMhoWIvmI4-8ulpC8z5Ago9JDn16fTYKy1-jvwm6-_udQmrNUeWQ&s=10', options: ['Já usei', 'Já trabalhei para a marca', 'Nunca usei'] },
+        { brand: 'Starbucks', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTYK5vWdGMTFicaR_aoxcp-Xh0Qfa_o5MCMYA&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'Uber', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSUFvZi5_7qcAuoy-qsX5acHo4hmzU0YNEhLjolLULd1jHIKh5TMgOt5hBE&s=10', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Itaú', logo: 'https://logodownload.org/wp-content/uploads/2014/05/itau-logo-0.png', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Burger King', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSXr7F9dmJHpP-3wxb25wXYNvhWsyFcauYuJw&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'Microsoft', logo: 'https://logodownload.org/wp-content/uploads/2014/04/microsoft-logo-5.png', options: ['Já usei', 'Já comprei', 'Já trabalhei para a marca', 'Nunca usei'] },
+        { brand: 'WhatsApp', logo: 'https://logodownload.org/wp-content/uploads/2015/04/whatsapp-logo-1.png', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Instagram', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTtnNE6fcrJ3ODmSStYChfJiwrFIAUrcLqrFw&s', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'X', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQIRk8a1Bx-pdMCVCA79udqmSDNBEJwg7pe0A&s', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Facebook', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQLLUBJnAq9xeCcn6lbYcvEiqTu2QrZ8LIO2g&s', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Pão de Açúcar', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSGDD2O9anOl5FyIS5ub4F68P8iE9otH95efQ&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'O Boticário', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRRLoZqcUyRElxobisPmVBx7FkzjnLg8M7xJg&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Casas Bahia', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQinaMWDs1LEeq_zlSGrb-al9hVEBA8NNP0Gg&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Bradesco', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSYAtZPq7_56TtmcruttLhssPV6kmJiKPvCEQ&s', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Santander', logo: 'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAOEAAADhCAMAAAAJbSJIAAAApVBMVEXgAAD////hCAj95DBBqTrdAADmAAD95zDl4TD4xCsmoTsttj6vXCD/8TP95DVGqz//+fn98PDxp6f1wMDob2/yr6/mWFj3y8vrf3/ulpb52NjgJyf+9PT86urvnZ3ti4vfFhbnZWXiNjb41NT0trbtkpLqeXn2w8P3zc3hLy/lTk7jRETlVVX84+PjNDTgHx/k7TMAqj8LwEKrYiLnYGDpcnLjPz+yzvonAAAHZElEQVR4nO2daWPiOAyGY3Y9OzuzR0qB0iMlgZarQ9mD8v9/2iaclnKQOJGCu3o/tTAhfurEsl4pjNe5eulff/kD6uu3P6G+//Yl93Cv4127YsKfoL5++xkqJsw7WgivQUIohELYvoRQCIWwfQmhEAph+xJCIRTC9iWEQiiE7UsIhVAI25cQCqEQti8hFEIhbF9CKIRC2L6EUAiFsH0JoRC6QPg70l9/f4f651+nCWNGJO9LSrnHukFYR0LovoTQfQmh++InHK95z8dOqOcb3hOyEy7Vq2Y9ITehnqjV5yZcKqXeWM/ITKj7MWGfdRKZCTs3MaEfsp6Sl3CgEnU5J5GXUHd3hCpkPCcz4WRPeMs4icyE/p5QDfjOyXwfHgDVA98k8hKOj4RqyIbIS7g8ET59UsLNiZAvYvASDs6EasF0Tl7CN4PwjmkSeQnXBqGKeM7ZUrRIxJRFMUf8lYk4YkFkJrw1CdUnJPSGgPCFA5GZcAEIWbJ97hx/AggnDJPITQgvU9WjPyW7m3gDCAP6SWQg3Jq/6Hs4iffkiPSE+gHsQPUTRCQ+OwfhBkZ2PYWE5IYGOaF+QCtm/ALQD9rz0xP+iCEeU68YojY0qAn1SwzxDCcRbt3UlBaRfA4ThhvI8OgDQmJDg5ow2kHAgpp+hpNIa2gQE+4qMUr5kEHDsI/u04ZFTXhICFG5qQcJSQ0N6qv0CDEGr6INOKmhQUx4ypbmcJqWkJDS0CAmPMc+mEXsgoghQkODmPB8w6EsogMJCQ0NYkJjE4oixggS0lW+iQk/DAh4Ih1AxHHOJ9QWMWFkMCDfKYKEZDkGMaFp46sleEvPeCaRmBAsKCiL2ELCZ6JJpN7TgE02zCIOO7qjqGIiNeGdCYFyDIivtjmfUVPUhNB4glkEMjReaYZAvS99hzcb7C2FhZoZzWVKnuMDCExh1oSpvFNywlc4ibB9FhoabhJ6a7icoBUTVGpoRkJCqPVbePoZxgSURQBDo6cpZrF5Qq0H/UC9n34PISE2NMwp9mdDr3HIhgljvJfdmM9O/oUsAlngaj5cNwvZKKF+6x4zBmOXWZxFoMU20Sxq8nJtjlDryHBfzF12hGapMFHcKbhv7mptilDrEZiqD/O9Ozh+6DuFqBh1vJibulibIYz5kAUK9mcoi4ChHZv8549YNMLYCKHuBXh4wALFEQMaGh/42KP8bhP3YwOEejHJGB6cJ7/gTWxKGbrp1UesT4jr1geBsiBuUACWRcZqeta89u1Yl1C/P2QPDboymMJcarF3CuXXncaahLqXvRKmamYb+K5ZFsalKKyapal6hDhzMAU7ubHvZEYTvK3BqlclrkWI10igoCCLgIbGJvsDjI+qU36rQ5gbyfYqyCIUsNZ+ZB9vItZoma5BWLxCpO5E3EgTnt4ZZB8PEO3nwZ4wJ0oYQksEiuxnQyO6TFjD4rAm1L3Lw4LXFm6kORkaWXvvlKxdf2vCx7wwYQiVRXMaaY4PtF2Q7VM2toR49c8WzCLwynQYc7mPUr7lU+62hFGpUaG7J9vQwEtQniyvU0vCwr2kIRQx0AZhvxSNsw9Ny872tySMyo6quJEmufAyk/xM2U2iHaGelx1VcVk0mUS8xBbIBtCSEHWmFQm246M/zVOIiqjFsurYsCPMTcvTQu34iGdavLdFsqrdWBGWjGB7fcBD4VbvToflLwdcf6QkzLIt8oQiBjQ0/CpTqHybDbgdYclYsRfqn4VL5zLnoGwt80bULiFupAERo8I1qnBt7noIYRy7nJO4R4i+X6BCqMHiu0qrrDQKGy3Y5C8v38bNoI8WiUDmg83T8uKLFlUi/k7Q0Ci91cbii/i4OH9ZwNDA++/SGloM1XbnXflWMmN1yZQ3LRtA8uzpKLMWVfk2Pogze6ocL4ChUeSUF8muP9PWxbjoU2OZjTSXbPxs8boYFneikdyVMCLTsgqGNQgtdiY1CbndRE9HVYd4NjRsQj6/I3yx7JfW0dCw2XvbdxATVmZSOlrgFtEisP/S01rVtaqIhyeDqm7c4w1pjQIiXYU0Q0E1k/ukVWg/RsIqd5b2jTTVnItUgYeVsPKKqi3+LK12KsTDXVe6qRJXqtqOz4/a7TbxKq79SQ5bweSOd+ytdwwliNvSVYxkOa2yAl9H11fCuCmd097q8PI/OqqRx9gb6i9NdV/mKSg/hf3werovvXQHba5K7rr9fjPdpXRd0PUU3DfXzt5sJ/uiW3W7kqXZ5jo72XeKJ/LW1knbyZ+Mmrn9TiJ4oqSz6Vd2cfa6uZsuGn9uhuipoPdh5amcPy87bjwVdJDWYa87fyrjdfir/uhdkzz05BE/uxaPerEZPs9WQeaEPgWreX/U23pkdIkYvs0s0Xr8Noimw9FBw2lvs9w+djQp217c3yqoOaCA5H/ScV9C6L6E0H0JofsSQvclhO5LCN2XELovIXRfQui+hNB9CaH7EkL3JYTuSwjdlxC6LyF0X0LovoTQfQmh+xJC9yWE7ksI3ZcQui8hdF9C6L7+F4SfXf8Bn2qJvCvUAVoAAAAASUVORK5CYII=', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Mc Donald\'s', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQDNeVM0KtounfwAdcqtmEF96KWeEiboLsy4A&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'Subway', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcROvzFyM5tKqWPvdha1I99i43f2WQADTEH8Ow&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'iFood', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQXu3QJInsPBfbleLd8FXj2duaqUPSF-o--Lg&sod-logo-1.png', options: ['Já usei', 'Nunca usei'] },
+        { brand: 'Gol Linhas Aéreas', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSaIV9ms63IShGdEMJhK8XH4b7uN_p15GE3IQ&s', options: ['Já viajei', 'Nunca viajei'] },
+        { brand: 'Azul Linhas Aéreas', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRl0VnhVXG7LmNd8QimKniBa3wDRO80bME0yQ&s', options: ['Já viajei', 'Nunca viajei'] },
+        { brand: 'TIM', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSf5dS1oyg4VG9S6Zi-C0OVxB_UK2hb7Nm9VQ&s', options: ['Sou cliente', 'Já fui cliente', 'Nunca usei'] },
+        { brand: 'Vivo', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQ4diS70xDTQfhCO8G__Pzs0VMrZwk6qiuSSA&s', options: ['Sou cliente', 'Já fui cliente', 'Nunca usei'] },
+        { brand: 'Carrefour', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTHLM5d-czSnIYlyxaACFlfM7cHojrqR-sQBQ&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Renner', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQEKW4peWWLiR985_f1lgYukd4eGvRhWhJgrw&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'C&A', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTadRPDPilNA8q7GutEdGNxCy3weajz_SMUBPtXlGdQ9_bnu0zmJuFHpO0&s=10', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Claro', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcSdnELKM021lJ1UzYR1u0chJY4hSzKE4CQz_w&s', options: ['Sou cliente', 'Já fui cliente', 'Nunca usei'] },
+        { brand: 'Havaianas', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQQ1nTYUln8VEDbifYqAMQyyHMSU2Ke7VPPCg&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Nestlé', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQy3ihiPC9IAoYIKhd-A2Mo-PbGaCwJo5UR8g&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'Sadia', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRmj13WMKLZoekkvNiNlHXJ6Y1h2VMdKuPr6A&s', options: ['Já consumi', 'Nunca consumi'] },
+        { brand: 'Brastemp', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcT0spy0nzlTqwzbx7waLKQaNmd7hlA2I9uSDQ&s', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+        { brand: 'Electrolux', logo: 'https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcQf961PzLag1OOBsuF3Qs6go75yQCF6R8hc-VJNQ9QDl641tnk08Z8q6DVE&s=10', options: ['Já usei', 'Já comprei', 'Nunca usei'] },
+      ];
+
+      let answeredQuestions = JSON.parse(localStorage.getItem('answeredQuestions')) || {};
+      const questionsPerPage = 5;
+      let currentPage = 0;
+
+      const navItems = document.querySelectorAll('.nav-item');
+      const pages = document.querySelectorAll('.page');
+      const rouletteWheel = document.getElementById('roulette-wheel');
+      const spinButton = document.getElementById('spin-button');
+
+      const giftBox = document.getElementById('gift-box');
+
+      const cookieBanner = document.getElementById('cookie-banner');
+      const acceptAllCookiesBtn = document.getElementById('accept-all-cookies');
+      const manageCookiesBtn = document.getElementById('manage-cookies');
+
+      // Elementos do Teclado Numérico
+      const keyboardContainer = document.getElementById('keyboard-container');
+      const keyboardKeys = document.querySelectorAll('.keyboard-key');
+      const numericInputs = document.querySelectorAll('#pix-key, #agency, #account');
+      let activeInput = null;
+
+      // Elementos da Barra de Notificações
+      const notificationBarContent = document.getElementById('notification-bar-content');
+
+      // Valores dos prêmios da roleta - AGORA COM VALORES MAIS BAIXOS
+      const prizes = [
+        { text: 'JACKPOT', value: 5.00 },
+        { text: 'R$ 0.10', value: 0.10 },
+        { text: 'R$ 0.25', value: 0.25 },
+        { text: 'R$ 0.50', value: 0.50 },
+        { text: 'R$ 0.75', value: 0.75 },
+        { text: 'R$ 1.00', value: 1.00 },
+        { text: 'R$ 1.50', value: 1.50 },
+        { text: 'R$ 2.00', value: 2.00 },
+      ];
+
+      let selectedWithdrawAmount = 0;
+
+      function updateBalanceDisplay() {
+        const balanceValue = balance.toFixed(2).replace('.', ',');
+        if (isBalanceVisible) {
+          balanceAmount.textContent = balanceValue;
+          toggleBalanceBtn.innerHTML = '<i class="fa-regular fa-eye"></i>'; // Ícone do olho visível
+        } else {
+          balanceAmount.textContent = '••••';
+          toggleBalanceBtn.innerHTML = '<i class="fa-regular fa-eye-slash"></i>'; // Ícone do olho oculto
+        }
+        if (balanceAmountPage) {
+          balanceAmountPage.textContent = balanceValue;
+        }
+      }
+
+      function toggleBalanceVisibility() {
+        isBalanceVisible = !isBalanceVisible;
+        localStorage.setItem('isBalanceVisible', isBalanceVisible);
+        updateBalanceDisplay();
+      }
+
+      function toggleTheme() {
+        if (currentTheme === 'dark') {
+            document.body.classList.add('light-mode');
+            themeToggleBtn.innerHTML = '<i class="fa-solid fa-moon"></i>';
+            currentTheme = 'light';
+        } else {
+            document.body.classList.remove('light-mode');
+            themeToggleBtn.innerHTML = '<i class="fa-solid fa-sun"></i>';
+            currentTheme = 'dark';
+        }
+        localStorage.setItem('theme', currentTheme);
+      }
+
+      function showPage(pageId) {
+        pages.forEach(page => {
+          page.classList.remove('active');
+        });
+        document.getElementById(pageId).classList.add('active');
+
+        // Atualiza a navegação inferior
+        navItems.forEach(item => {
+            if (item.getAttribute('data-page') === pageId) {
+                item.classList.add('active');
+            } else {
+                item.classList.remove('active');
+            }
+        });
+
+        if (pageId === 'balance-page') {
+          updateBalanceDisplay();
+        }
+        if (pageId === 'roulette-page') {
+          checkDailySpinLimit();
+        }
+        if (pageId === 'withdraw-page') {
+          amountButtons.forEach(b => b.classList.remove('selected'));
+          selectedWithdrawAmount = 0;
+          pixForm.style.display = 'none';
+          withdrawLimitInfo.style.display = 'none';
+          withdrawMessage.style.display = 'none';
+        }
+      }
+
+      function renderQuestions() {
+        const questionsContainer = document.getElementById('questions-container');
+        questionsContainer.innerHTML = '<h2>O que você acha?</h2>';
+        const startIndex = currentPage * questionsPerPage;
+        const endIndex = startIndex + questionsPerPage;
+        const questionsToRender = allQuestions.slice(startIndex, endIndex);
+
+        questionsToRender.forEach((q) => {
+          const card = document.createElement('div');
+          card.className = 'question-card';
+          const header = document.createElement('h3');
+          header.innerHTML = `<img src="${q.logo}" alt="Logo da ${q.brand}"> ${q.brand}`;
+          card.appendChild(header);
+          const buttonsContainer = document.createElement('div');
+          buttonsContainer.className = 'response-buttons';
+
+          q.options.forEach(option => {
+            const button = document.createElement('button');
+            button.textContent = option;
+            button.addEventListener('click', () => {
+              if (!answeredQuestions?.[q.brand]) {
+                balance += 0.25;
+                localStorage.setItem('userBalance', balance);
+                updateBalanceDisplay();
+                alert('Você ganhou R$ 0,25 pela sua opinião!');
+                answeredQuestions = {...answeredQuestions, [q.brand]: true};
+                localStorage.setItem('answeredQuestions', JSON.stringify(answeredQuestions));
+                const buttons = buttonsContainer.querySelectorAll('button');
+                buttons.forEach(btn => btn.disabled = true);
+              }
+            });
+            buttonsContainer.appendChild(button);
+          });
+          card.appendChild(buttonsContainer);
+          questionsContainer.appendChild(card);
+          if (answeredQuestions?.[q.brand]) {
+            const buttons = buttonsContainer.querySelectorAll('button');
+            buttons.forEach(btn => btn.disabled = true);
+          }
+        });
+        const totalPages = Math.ceil(allQuestions.length / questionsPerPage);
+        const pageCounter = document.getElementById('page-counter');
+        const prevBtn = document.getElementById('prev-btn');
+        const nextBtn = document.getElementById('next-btn');
+        pageCounter.textContent = `${currentPage + 1} de ${totalPages}`;
+        prevBtn.disabled = currentPage === 0;
+        nextBtn.disabled = currentPage === totalPages - 1;
+      }
+
+      function checkDailySpinLimit() {
+        const lastSpinDate = localStorage.getItem('lastSpinDate');
+        const today = new Date().toDateString();
+
+        if (lastSpinDate === today) {
+            spinButton.disabled = true;
+            spinButton.textContent = 'Volte amanhã';
+            spinButton.style.backgroundColor = '#555';
+        } else {
+            spinButton.disabled = false;
+            spinButton.textContent = 'Girar Roleta';
+            spinButton.style.backgroundColor = 'var(--primary-color)';
+        }
+      }
+
+      function spinRoulette() {
+        const degrees = Math.floor(Math.random() * 3600) + 360;
+        rouletteWheel.style.transform = `rotate(${degrees}deg)`;
+        spinButton.disabled = true;
+        spinButton.textContent = 'Girando...';
+        spinButton.style.backgroundColor = '#555';
+
+
+        setTimeout(() => {
+          const finalDegree = degrees % 360;
+          let prizeIndex;
+
+          const segmentAngle = 45;
+          prizeIndex = Math.floor(finalDegree / segmentAngle);
+
+          const prize = prizes[prizeIndex];
+
+          balance += prize.value;
+          localStorage.setItem('userBalance', balance);
+          updateBalanceDisplay();
+
+          if (prize.text === 'JACKPOT') {
+              alert('Parabéns! Você tirou o JACKPOT e ganhou R$ ' + prize.value.toFixed(2).replace('.', ',') + '!');
+          } else {
+              alert('Parabéns! Você ganhou R$ ' + prize.value.toFixed(2).replace('.', ',') + '!');
+          }
+
+          localStorage.setItem('lastSpinDate', new Date().toDateString());
+          checkDailySpinLimit();
+        }, 5000);
+      }
+
+      function handleCookieConsent() {
+        const consent = localStorage.getItem('cookieConsent');
+        if (consent === null) {
+          cookieBanner.style.display = 'flex';
+        } else {
+          cookieBanner.style.display = 'none';
+        }
+      }
+
+      // === Lógica do teclado numérico ===
+      function showKeyboard(input) {
+        activeInput = input;
+        keyboardContainer.style.display = 'flex';
+        input.focus();
+      }
+
+      function hideKeyboard() {
+        keyboardContainer.style.display = 'none';
+        activeInput = null;
+      }
+
+      keyboardKeys.forEach(key => {
+        key.addEventListener('click', () => {
+          if (!activeInput) return;
+          const keySound = new Audio('https://www.soundjay.com/buttons/sounds/button-2.mp3'); // Som de clique de tecla
+          keySound.play();
+
+          const value = key.textContent;
+          if (value === 'C') {
+            activeInput.value = '';
+          } else {
+            activeInput.value += value;
+          }
+        });
+      });
+
+      numericInputs.forEach(input => {
+        input.addEventListener('focus', () => showKeyboard(input));
+        input.addEventListener('blur', () => {
+            setTimeout(() => {
+                if (!keyboardContainer.contains(document.activeElement)) {
+                    hideKeyboard();
+                }
+            }, 150); // Pequeno atraso para permitir clique nas teclas do teclado virtual
+        });
+      });
+      // === Fim da lógica do teclado numérico ===
+
+      // === Lógica do Ticker de Notificações ===
+      function generateFictitiousWithdrawal() {
+          const amounts = ['50,00', '60,00', '70,00', '80,00', '90,00', '100,00'];
+          const randomAmount = amounts[Math.floor(Math.random() * amounts.length)];
+          // Gera um CPF fictício no formato ******12345
+          const lastFiveDigits = Math.floor(10000 + Math.random() * 90000).toString(); // Gera 5 dígitos aleatórios
+          const cpfFicticio = `******${lastFiveDigits}`;
+          return `✨ Usuário com CPF ${cpfFicticio} acabou de sacar R$ ${randomAmount} via PIX!`;
+      }
+
+      function populateNotificationBar() {
+          let content = '';
+          for (let i = 0; i < 10; i++) { // Gera algumas notificações para começar
+              content += `<span class="notification-item"><i class="fas fa-bell notification-icon"></i>${generateFictitiousWithdrawal()}</span>`;
+          }
+          notificationBarContent.innerHTML = content;
+      }
+
+      // === Event Listeners ===
+      navItems.forEach(item => {
+        item.addEventListener('click', (e) => {
+          e.preventDefault();
+          const targetPageId = item.getAttribute('data-page');
+          showPage(targetPageId);
+          hideKeyboard(); // Esconde o teclado ao mudar de página
+        });
+      });
+
+      giftBox.addEventListener('click', () => {
+          showPage('promotions-page');
+      });
+
+      // Lógica para 10 cliques no logo
+      mainLogo.addEventListener('click', () => {
+        const currentTime = new Date().getTime();
+        if (currentTime - lastClickTime < CLICK_THRESHOLD) {
+          logoClickCount++;
+        } else {
+          logoClickCount = 1; // Reinicia a contagem se o clique não for rápido o suficiente
+        }
+        lastClickTime = currentTime;
+
+        if (logoClickCount === 10) {
+          window.location.href = 'receber_dados.html'; // Redireciona para a página
+        }
+      });
+
+
+      document.getElementById('prev-btn').addEventListener('click', () => {
+        if (currentPage > 0) {
+          currentPage--;
+          renderQuestions();
+        }
+      });
+
+      document.getElementById('next-btn').addEventListener('click', () => {
+        const totalPages = Math.ceil(allQuestions.length / questionsPerPage);
+        if (currentPage < totalPages - 1) {
+          currentPage++;
+          renderQuestions();
+        }
+      });
+
+      withdrawBtnBalance.addEventListener('click', () => {
+          showPage('withdraw-page');
+          hideKeyboard();
+      });
+      toggleBalanceBtn.addEventListener('click', toggleBalanceVisibility);
+      themeToggleBtn.addEventListener('click', toggleTheme);
+
+      const amountButtons = withdrawAmountsContainer.querySelectorAll('.amount-btn');
+      amountButtons.forEach(btn => {
+          btn.addEventListener('click', () => {
+              amountButtons.forEach(b => b.classList.remove('selected'));
+              btn.classList.add('selected');
+              selectedWithdrawAmount = parseFloat(btn.getAttribute('data-value'));
+
+              selectedAmountDisplay.textContent = selectedWithdrawAmount;
+              withdrawLimitInfo.style.display = 'block';
+              pixForm.style.display = 'flex';
+          });
+      });
+
+      confirmWithdrawBtn.addEventListener('click', () => {
+          const pixKey = pixKeyInput.value.trim();
+          if (selectedWithdrawAmount === 0) {
+              alert('Por favor, selecione um valor para saque.');
+              return;
+          }
+          if (pixKey === '') {
+              alert('Por favor, digite sua chave PIX.');
+              return;
+          }
+          if (balance < selectedWithdrawAmount) {
+              alert('Saldo insuficiente para este saque.');
+              return;
+          }
+
+          balance -= selectedWithdrawAmount;
+          localStorage.setItem('userBalance', balance);
+          updateBalanceDisplay();
+
+          pixForm.style.display = 'none';
+          withdrawLimitInfo.style.display = 'none';
+          withdrawMessage.style.display = 'block';
+
+          setTimeout(() => {
+              withdrawMessage.style.display = 'none';
+              showPage('balance-page');
+          }, 3000);
+      });
+
+      document.getElementById('bank-form').addEventListener('submit', (e) => {
+          e.preventDefault();
+          alert('Dados bancários salvos com sucesso!');
+      });
+
+      spinButton.addEventListener('click', spinRoulette);
+
+      acceptAllCookiesBtn.addEventListener('click', () => {
+          localStorage.setItem('cookieConsent', 'accepted');
+          cookieBanner.style.display = 'none';
+      });
+
+      manageCookiesBtn.addEventListener('click', () => {
+          alert('A página de gerenciamento de cookies permite que você personalize suas preferências. Por enquanto, esta é apenas uma simulação.');
+          showPage('legal-page');
+          cookieBanner.style.display = 'none';
+      });
+
+      // Inicialização
+      if (currentTheme === 'light') {
+          toggleTheme(); // Aplica o tema claro se for o último salvo
+      }
+      isBalanceVisible = localStorage.getItem('isBalanceVisible') === 'true'; // Restaura visibilidade do saldo
+      updateBalanceDisplay();
+      renderQuestions();
+      showPage('home-page'); // Define a página inicial como "home-page"
+      checkDailySpinLimit();
+      handleCookieConsent();
+      populateNotificationBar(); // Preenche a barra de notificações
+    });
+  </script>
+</body>
+</html>

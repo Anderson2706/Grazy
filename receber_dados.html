@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dados Recebidos</title>
+    <style>
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0E0E10;
+            color: #FFFFFF;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+        .data-container {
+            max-width: 600px;
+            width: 100%;
+            padding: 40px;
+            background-color: #1E1E22;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+            text-align: center;
+            position: relative; /* Para posicionar os botões */
+        }
+        .data-container h2 {
+            color: #9B5FFF;
+            margin-bottom: 20px;
+        }
+
+        /* Estilos da tabela (planilha) */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+        th, td {
+            text-align: left;
+            padding: 12px 15px;
+            border-bottom: 1px solid #333338;
+            font-size: 16px;
+        }
+        th {
+            background-color: #2D2D33;
+            color: #AAAAAA;
+            font-weight: bold;
+        }
+        tr:last-child td {
+            border-bottom: none;
+        }
+        tr:hover {
+            background-color: #25252b;
+        }
+        .no-data {
+            color: #AAAAAA;
+            font-style: italic;
+        }
+
+        /* Estilos dos botões de navegação */
+        .navigation {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 20px;
+        }
+        .nav-btn {
+            background-color: #9B5FFF;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 40px;
+            height: 40px;
+            font-size: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background-color 0.3s;
+        }
+        .nav-btn:hover:not(:disabled) {
+            background-color: #7a3eec;
+        }
+        .nav-btn:disabled {
+            background-color: #444;
+            cursor: not-allowed;
+        }
+        .page-counter {
+            color: #AAAAAA;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="data-container">
+        <h2>Dados do Cadastro</h2>
+        <table id="dados-recebidos">
+            <thead>
+                <tr>
+                    <th>Campo</th>
+                    <th>Valor</th>
+                </tr>
+            </thead>
+            <tbody>
+                </tbody>
+        </table>
+        
+        <div id="no-data-message" class="no-data" style="display: none;">
+            Nenhum dado de cadastro foi enviado.
+        </div>
+        
+        <div class="navigation">
+            <button id="prev-btn" class="nav-btn"><</button>
+            <span id="page-counter" class="page-counter"></span>
+            <button id="next-btn" class="nav-btn">></button>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            const tableBody = document.querySelector('#dados-recebidos tbody');
+            const noDataMessage = document.getElementById('no-data-message');
+            const prevBtn = document.getElementById('prev-btn');
+            const nextBtn = document.getElementById('next-btn');
+            const pageCounter = document.getElementById('page-counter');
+            
+            let currentPageIndex = 0;
+            const cadastros = JSON.parse(localStorage.getItem('cadastros')) || [];
+
+            function renderCadastro(index) {
+                if (cadastros.length === 0) {
+                    tableBody.innerHTML = '';
+                    document.getElementById('dados-recebidos').style.display = 'none';
+                    noDataMessage.style.display = 'block';
+                    document.querySelector('.navigation').style.display = 'none';
+                    return;
+                }
+
+                const data = cadastros[index];
+                tableBody.innerHTML = '';
+                noDataMessage.style.display = 'none';
+                document.getElementById('dados-recebidos').style.display = 'table';
+                document.querySelector('.navigation').style.display = 'flex';
+
+                const labels = {
+                    'full-name': 'Nome Completo',
+                    'username': 'Nome de Usuário',
+                    'email': 'E-mail',
+                    'phone': 'Telefone',
+                    'password': 'Senha'
+                };
+
+                for (const key in data) {
+                    if (data.hasOwnProperty(key)) {
+                        const row = document.createElement('tr');
+                        
+                        const labelCell = document.createElement('td');
+                        labelCell.textContent = labels[key] || key;
+                        
+                        const valueCell = document.createElement('td');
+                        valueCell.textContent = data[key];
+                        
+                        row.appendChild(labelCell);
+                        row.appendChild(valueCell);
+                        tableBody.appendChild(row);
+                    }
+                }
+                
+                // Atualiza o contador de página e o estado dos botões
+                pageCounter.textContent = `${index + 1} de ${cadastros.length}`;
+                prevBtn.disabled = index === 0;
+                nextBtn.disabled = index === cadastros.length - 1;
+            }
+
+            // Event listeners para os botões
+            prevBtn.addEventListener('click', () => {
+                if (currentPageIndex > 0) {
+                    currentPageIndex--;
+                    renderCadastro(currentPageIndex);
+                }
+            });
+
+            nextBtn.addEventListener('click', () => {
+                if (currentPageIndex < cadastros.length - 1) {
+                    currentPageIndex++;
+                    renderCadastro(currentPageIndex);
+                }
+            });
+
+            // Renderiza o primeiro cadastro ao carregar a página
+            renderCadastro(currentPageIndex);
+        });
+    </script>
+
+</body>
+</html>
