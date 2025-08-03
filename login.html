@@ -1,275 +1,149 @@
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-
     <meta charset="UTF-8">
-
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Login</title>
-
     <style>
-
-      body {
-
-        margin: 0;
-
-        font-family: 'Arial', sans-serif;
-
-        background-color: #0E0E10;
-
-        color: #FFFFFF;
-
-      }
-
-  
-
-      .container {
-
-        max-width: 400px;
-
-        margin: 0 auto;
-
-        padding: 20px;
-
-        display: flex;
-
-        flex-direction: column;
-
-        align-items: center;
-
-        justify-content: center;
-
-        height: 100vh;
-
-      }
-
-  
-
-      .logo {
-
-        text-align: center;
-
-        margin-bottom: 40px;
-
-      }
-
-  
-
-      .logo img {
-
-        height: 180px;
-
-      }
-
-  
-
-      .input-group {
-
-        margin-bottom: 15px;
-
-        width: 100%;
-
-      }
-
-  
-
-      label {
-
-        display: block;
-
-        margin-bottom: 5px;
-
-        font-weight: bold;
-
-        color: #AAAAAA;
-
-      }
-
-  
-
-      input {
-
-        width: 100%;
-
-        padding: 12px;
-
-        border: none;
-
-        border-radius: 5px;
-
-        background-color: #1E1E22;
-
-        color: #FFFFFF;
-
-        font-size: 16px;
-
-        font-weight: bold;
-
-      }
-      input:focus {
-
-        outline: none;
-
-      }
-
-      .error-message {
-          color: red;
-          font-size: 14px;
-          text-align: center;
-          margin-top: -10px;
-          margin-bottom: 10px;
-          display: none; /* Inicia oculto */
-      }
-
-      .btn {
-
-        width: 100%;
-
-        background-color: #4a01ff;
-
-        color: white;
-
-        font-size: 18px;
-
-        font-weight: bold;
-
-        padding: 14px;
-
-        border: none;
-
-        border-radius: 6px;
-
-        margin-top: 20px;
-
-        cursor: pointer;
-
-      }
-
-  
-
-      .register {
-
-        text-align: center;
-
-        margin-top: 15px;
-
-        color: #AAAAAA;
-
-      }
-
-  
-
-      .register a {
-
-        color: #4a01ff;
-
-        text-decoration: none;
-
-        font-weight: bold;
-
-      }
-
+        body {
+            margin: 0;
+            font-family: 'Arial', sans-serif;
+            background-color: #0E0E10;
+            color: #FFFFFF;
+        }
+        .container {
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+        }
+        .logo {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .logo img {
+            height: 180px;
+        }
+        .input-group {
+            margin-bottom: 15px;
+            width: 100%;
+        }
+        label {
+            display: block;
+            margin-bottom: 5px;
+            font-weight: bold;
+            color: #AAAAAA;
+        }
+        input {
+            width: 100%;
+            padding: 12px;
+            border: none;
+            border-radius: 5px;
+            background-color: #1E1E22;
+            color: #FFFFFF;
+            font-size: 16px;
+            font-weight: bold;
+        }
+        input:focus {
+            outline: none;
+        }
+        .error-message {
+            color: red;
+            font-size: 14px;
+            text-align: center;
+            margin-top: -10px;
+            margin-bottom: 10px;
+            display: none; /* Inicia oculto */
+        }
+        .btn {
+            width: 100%;
+            background-color: #4a01ff;
+            color: white;
+            font-size: 18px;
+            font-weight: bold;
+            padding: 14px;
+            border: none;
+            border-radius: 6px;
+            margin-top: 20px;
+            cursor: pointer;
+        }
+        .register {
+            text-align: center;
+            margin-top: 15px;
+            color: #AAAAAA;
+        }
+        .register a {
+            color: #4a01ff;
+            text-decoration: none;
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
-
     <div class="container">
-
-      <div class="logo">
-
-        <img src="lg.png" alt="Logo">
-
-      </div>
-
-      <form id="login-form" style="width: 100%;">
-
-          <div class="input-group">
-
-              <label for="username_login">Nome de usuário ou E-mail</label>
-
-              <input type="text" id="username_login" name="username_login" placeholder="Seu nome ou e-mail" required>
-
-          </div>
-
-          <div class="input-group">
-
-              <label for="password_login">Senha</label>
-
-              <input type="password" id="password_login" name="password_login" placeholder="••••••••" required>
-
-          </div>
-
-          <p id="error-message" class="error-message">Usuário ou senha inválidos. Por favor, tente novamente.</p>
-
-          <button class="btn" type="submit">Entrar</button>
-
-      </form>
-
-      <div class="register">
-
-        Não tem uma conta? <a href="index.html">Cadastre-se agora!</a>
-
-      </div>
-
+        <div class="logo">
+            <img src="lg.png" alt="Logo">
+        </div>
+        <form id="login-form" style="width: 100%;">
+            <div class="input-group">
+                <label for="username_login">Nome de usuário ou E-mail</label>
+                <input type="text" id="username_login" name="username_login" placeholder="Seu nome ou e-mail" required>
+            </div>
+            <div class="input-group">
+                <label for="password_login">Senha</label>
+                <input type="password" id="password_login" name="password_login" placeholder="••••••••" required>
+            </div>
+            <p id="error-message" class="error-message">Usuário ou senha inválidos. Por favor, tente novamente.</p>
+            <button class="btn" type="submit">Entrar</button>
+        </form>
+        <div class="register">
+            Não tem uma conta? <a href="index.html">Cadastre-se agora!</a> </div>
     </div>
-
     <script>
-
         document.addEventListener('DOMContentLoaded', () => {
-
             const loginForm = document.getElementById('login-form');
-
             const usernameInput = document.getElementById('username_login');
-
             const passwordInput = document.getElementById('password_login');
-
             const errorMessage = document.getElementById('error-message');
 
-            loginForm.addEventListener('submit', (event) => {
+            // ATENÇÃO: SUBSTITUA '192.168.0.104' ABAIXO PELO IP REAL QUE SEU FLASK ESTÁ USANDO!
+            // O IP que você viu no Termux é: 192.168.0.104
+            const FLASK_LOGIN_URL = 'http://192.168.0.104:5000/login';
 
+            loginForm.addEventListener('submit', async (event) => {
                 event.preventDefault(); // Impede o envio padrão do formulário
 
-                const enteredUsername = usernameInput.value.trim();
+                const formData = new FormData(loginForm); // Coleta os dados do formulário de login
 
-                const enteredPassword = passwordInput.value.trim();
+try {
+                    const response = await fetch(FLASK_LOGIN_URL, {
+                        method: 'POST',
+                        body: formData // Envia os dados para a rota /login do Flask
+                    });
 
-                // Pega os dados do localStorage
+                    const result = await response.json(); // Pega a resposta JSON do Flask
 
-                const cadastros = JSON.parse(localStorage.getItem('cadastros')) || [];
-
-                // Verifica se há um usuário com os dados correspondentes
-
-                const userFound = cadastros.find(user => 
-
-                    (user.username === enteredUsername || user.email === enteredUsername) && 
-
-                    user.password === enteredPassword
-
-                );
-
-                if (userFound) {
-
-                    // Login bem-sucedido
-
-                    errorMessage.style.display = 'none';
-
-                    alert('Login bem-sucedido! Você será redirecionado.');
-
-                    window.location.href = 'site.html'; // Redireciona para a página principal
-
-                } else {
-
-                    // Login falhou
-
+                    if (response.ok) { // Se o status HTTP for 200 (OK)
+                        errorMessage.style.display = 'none';
+                        alert('Login bem-sucedido! Você será redirecionado.');
+                        window.location.href = 'site.html'; // Redireciona para a página principal
+                    } else { // Se o status HTTP for 401 (Unauthorized) ou outro erro
+                        errorMessage.textContent = result.mensagem || 'Usuário ou senha inválidos. Por favor, tente novamente.';
+                        errorMessage.style.display = 'block';
+                        console.error('Erro de login:', result);
+                    }
+                } catch (error) {
+                    // Erros de rede ou servidor offline
+                    errorMessage.textContent = 'Não foi possível conectar ao servidor. Verifique sua conexão e o IP.';
                     errorMessage.style.display = 'block';
-
+                    console.error('Erro ao tentar login:', error);
                 }
-
             });
-
         });
-
     </script>
 </body>
 </html>
