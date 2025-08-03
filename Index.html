@@ -169,8 +169,9 @@
             event.preventDefault(); // Impede o envio padrão do formulário, que causaria o redirecionamento indesejado
 
             // ATENÇÃO: SUBSTITUA '192.168.0.104' ABAIXO PELO IP REAL QUE SEU FLASK ESTÁ USANDO!
-            // Você viu o IP correto no Termux quando rodou o 'app.py'.
-            const FLASK_CADASTRO_URL = 'http://192.168.0.104:5000/cadastrar';
+            // O IP que você viu no Termux é: 192.168.0.104
+            const FLASK_CADASTRO_URL = 'http://192.168.0.104:5000/cadastrar'; 
+
             const formData = new FormData(event.target); // Coleta todos os dados do formulário
 
             try {
