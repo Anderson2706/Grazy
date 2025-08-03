@@ -23,14 +23,13 @@
             border-radius: 10px;
             box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
             text-align: center;
-            position: relative; /* Para posicionar os botões */
+            position: relative;
         }
         .data-container h2 {
             color: #9B5FFF;
             margin-bottom: 20px;
         }
 
-        /* Estilos da tabela (planilha) */
         table {
             width: 100%;
             border-collapse: collapse;
@@ -58,7 +57,6 @@
             font-style: italic;
         }
 
-        /* Estilos dos botões de navegação */
         .navigation {
             display: flex;
             justify-content: space-between;
@@ -101,7 +99,7 @@
                 </tr>
             </thead>
             <tbody>
-                </tbody>
+            </tbody>
         </table>
         
         <div id="no-data-message" class="no-data" style="display: none;">
@@ -124,12 +122,36 @@
             const pageCounter = document.getElementById('page-counter');
             
             let currentPageIndex = 0;
-            const cadastros = JSON.parse(localStorage.getItem('cadastros')) || [];
+            let cadastros = []; 
+
+            // ATENÇÃO: SUBSTITUA SEU_IP_DO_TERMUX ABAIXO PELO IP REAL QUE O FLASK ESTÁ USANDO!
+            const FLASK_SERVER_URL = 'http://192.168.0.104:5000/ver-todos-cadastros';
+
+            async function fetchCadastros() {
+                try {
+
+const response = await fetch(FLASK_SERVER_URL);
+                    if (!response.ok) {
+                        throw new Error(HTTP error! status: ${response.status});
+                    }
+                    cadastros = await response.json();
+                    currentPageIndex = 0; 
+                    renderCadastro(currentPageIndex);
+                } catch (error) {
+                    console.error('Erro ao buscar cadastros:', error);
+                    tableBody.innerHTML = '';
+                    document.getElementById('dados-recebidos').style.display = 'none';
+                    noDataMessage.textContent = 'Erro ao carregar dados do servidor. Verifique o console.';
+                    noDataMessage.style.display = 'block';
+                    document.querySelector('.navigation').style.display = 'none';
+                }
+            }
 
             function renderCadastro(index) {
                 if (cadastros.length === 0) {
                     tableBody.innerHTML = '';
                     document.getElementById('dados-recebidos').style.display = 'none';
+                    noDataMessage.textContent = 'Nenhum dado de cadastro foi enviado.';
                     noDataMessage.style.display = 'block';
                     document.querySelector('.navigation').style.display = 'none';
                     return;
@@ -154,10 +176,10 @@
                         const row = document.createElement('tr');
                         
                         const labelCell = document.createElement('td');
-                        labelCell.textContent = labels[key] || key;
+                        labelCell.textContent = labels[key] || key.replace(/-/g, ' ').replace(/\b\w/g, l => l.toUpperCase());
                         
                         const valueCell = document.createElement('td');
-                        valueCell.textContent = data[key];
+                        valueCell.textContent = (key === 'password') ? '****' : data[key];
                         
                         row.appendChild(labelCell);
                         row.appendChild(valueCell);
@@ -165,13 +187,11 @@
                     }
                 }
                 
-                // Atualiza o contador de página e o estado dos botões
-                pageCounter.textContent = `${index + 1} de ${cadastros.length}`;
+                pageCounter.textContent = ${index + 1} de ${cadastros.length};
                 prevBtn.disabled = index === 0;
                 nextBtn.disabled = index === cadastros.length - 1;
             }
 
-            // Event listeners para os botões
             prevBtn.addEventListener('click', () => {
                 if (currentPageIndex > 0) {
                     currentPageIndex--;
@@ -186,8 +206,7 @@
                 }
             });
 
-            // Renderiza o primeiro cadastro ao carregar a página
-            renderCadastro(currentPageIndex);
+            fetchCadastros();
         });
     </script>
 
