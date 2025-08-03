@@ -127,7 +127,7 @@
         <div class="logo">
             <img src="lg.png" alt="Logo">
         </div>
-        <form id="cadastro-form" action="http://192.168.0.104:5000/cadastrar" method="POST">
+        <form id="cadastro-form">
             <div class="input-group">
                 <label for="full-name">Nome Completo</label>
                 <input type="text" id="full-name" name="full-name" placeholder="Seu nome completo" required>
@@ -137,9 +137,9 @@
                 <input type="text" id="username" name="username" placeholder="Seu nome de usuário" required>
             </div>
             <div class="input-group">
+                <label for="email">E-mail</label>
 
-<label for="email">E-mail</label>
-                <input type="email" id="email" name="email" placeholder="seu@email.com" required>
+<input type="email" id="email" name="email" placeholder="seu@email.com" required>
             </div>
             <div class="input-group">
                 <label for="phone">Telefone</label>
@@ -163,10 +163,36 @@
                 Já tem uma conta? <a href="login.html">Entre agora!</a>
             </div>
         </form>
-    </div>
 
     <script>
-        // Este script permanece vazio, pois o formulário faz POST para o Flask.
+        document.getElementById('cadastro-form').addEventListener('submit', async function(event) {
+            event.preventDefault(); // Impede o envio padrão do formulário
+
+            // ATENÇÃO: SUBSTITUA 192.168.0.104 ABAIXO PELO IP REAL DO SEU TERMUX!
+            const FLASK_CADASTRO_URL = 'http://192.168.0.104:5000/cadastrar';
+
+            const formData = new FormData(event.target);
+
+            try {
+                const response = await fetch(FLASK_CADASTRO_URL, {
+                    method: 'POST',
+                    body: formData
+                });
+
+                const result = await response.json();
+
+                if (response.ok) {
+                    alert('Cadastro realizado com sucesso! Redirecionando para a página de login.');
+                    window.location.href = 'login.html'; // Redireciona para login.html
+                } else {
+                    alert('Erro no cadastro: ' + (result.mensagem || 'Erro desconhecido.'));
+                    console.error('Erro no servidor:', result);
+                }
+            } catch (error) {
+                alert('Não foi possível conectar ao servidor. Verifique sua conexão e o IP.');
+                console.error('Erro ao enviar cadastro:', error);
+            }
+        });
     </script>
 </body>
 </html>
