@@ -166,29 +166,31 @@
 
     <script>
         document.getElementById('cadastro-form').addEventListener('submit', async function(event) {
-            event.preventDefault(); // Impede o envio padrão do formulário
+            event.preventDefault(); // Impede o envio padrão do formulário, que causaria o redirecionamento indesejado
 
-            // ATENÇÃO: SUBSTITUA 192.168.0.104 ABAIXO PELO IP REAL DO SEU TERMUX!
+            // ATENÇÃO: SUBSTITUA '192.168.0.104' ABAIXO PELO IP REAL QUE SEU FLASK ESTÁ USANDO!
+            // Você viu o IP correto no Termux quando rodou o 'app.py'.
             const FLASK_CADASTRO_URL = 'http://192.168.0.104:5000/cadastrar';
-
-            const formData = new FormData(event.target);
+            const formData = new FormData(event.target); // Coleta todos os dados do formulário
 
             try {
                 const response = await fetch(FLASK_CADASTRO_URL, {
                     method: 'POST',
-                    body: formData
+                    body: formData // Envia os dados do formulário para o servidor Flask
                 });
 
-                const result = await response.json();
+                const result = await response.json(); // Converte a resposta do servidor para JSON
 
-                if (response.ok) {
+                if (response.ok) { // Se a resposta HTTP for de sucesso (status 200-299)
                     alert('Cadastro realizado com sucesso! Redirecionando para a página de login.');
-                    window.location.href = 'login.html'; // Redireciona para login.html
+                    window.location.href = 'login.html'; // Redireciona o navegador para 'login.html'
                 } else {
+                    // Se o servidor retornar um erro (ex: status 400, 500)
                     alert('Erro no cadastro: ' + (result.mensagem || 'Erro desconhecido.'));
-                    console.error('Erro no servidor:', result);
+                    console.error('Erro no servidor:', result); // Exibe o erro no console do navegador para depuração
                 }
             } catch (error) {
+                // Captura erros de rede (como servidor offline, IP errado, etc.)
                 alert('Não foi possível conectar ao servidor. Verifique sua conexão e o IP.');
                 console.error('Erro ao enviar cadastro:', error);
             }
